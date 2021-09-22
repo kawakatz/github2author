@@ -1,5 +1,5 @@
 # github2author
-Extract authors information from commit logs.<br>
+Extract authors information from commit logs.<br><br>
 install<br>
 ```➜  ~ go get -u -v github.com/kawakatz/github2author```
 
