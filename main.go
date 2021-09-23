@@ -92,6 +92,11 @@ func main() {
 	if len(repos) == 0 {
 		repos = list_orgs_repo(ownername, apikey)
 	}
+	if len(repos) == 0 {
+		fmt.Println("No public repository was found.")
+		os.Exit(0)
+	}
+
 	for _, repo := range repos {
 		authors = append(authors, list_commits(ownername, *repo.Name, apikey)...)
 	}
