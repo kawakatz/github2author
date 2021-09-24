@@ -5,4 +5,5 @@ install<br>
 
 usage<br>
 ```➜  ~ export GITHUB_ACCESS_TOKEN=<ACCESS TOKEN>
-➜  ~ github2author <UserName or OrgName>```
+➜  ~ github2author <UserName or OrgName>
+```
