@@ -9,7 +9,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-func list_orgs_repo(orgname string, apikey string) []*github.Repository {
+func listOrgsRepos(orgname string, apikey string) []*github.Repository {
 	ctx := context.Background()
 
 	ts := oauth2.StaticTokenSource(
@@ -24,7 +24,7 @@ func list_orgs_repo(orgname string, apikey string) []*github.Repository {
 	return repos
 }
 
-func list_users_repo(username string, apikey string) []*github.Repository {
+func listUsersRepos(username string, apikey string) []*github.Repository {
 	ctx := context.Background()
 
 	ts := oauth2.StaticTokenSource(
@@ -57,7 +57,7 @@ func unique(arr []string) []string {
 	return result
 }
 
-func list_commits(ownername string, reponame string, apikey string) []string {
+func listCommits(ownername string, reponame string, apikey string) []string {
 	ctx := context.Background()
 
 	ts := oauth2.StaticTokenSource(
@@ -76,21 +76,25 @@ func list_commits(ownername string, reponame string, apikey string) []string {
 	return authors
 }
 
+func usage() {
+	fmt.Println("usage: github2email <UserName or OrgName>")
+}
+
 func main() {
 	ownername := os.Args[1]
-	apikey := os.Getenv("GITHUB_ACCESS_TOKEN")
+	apikey := os.Getenv("GITHUB_TOKEN")
 	if ownername == "" {
-		fmt.Println("Usage: github2email <UserName or OrgName>")
+		usage()
 		os.Exit(0)
 	} else if apikey == "" {
-		fmt.Println("Set GitHub Access Token as GITHUB_ACCESS_TOKEN")
+		fmt.Println("Set GitHub Access Token as GITHUB_TOKEN")
 		os.Exit(0)
 	}
 
 	authors := []string{}
-	repos := list_users_repo(ownername, apikey)
+	repos := listUsersRepos(ownername, apikey)
 	if len(repos) == 0 {
-		repos = list_orgs_repo(ownername, apikey)
+		repos = listOrgsRepos(ownername, apikey)
 	}
 	if len(repos) == 0 {
 		fmt.Println("No public repository was found.")
@@ -98,7 +102,7 @@ func main() {
 	}
 
 	for _, repo := range repos {
-		authors = append(authors, list_commits(ownername, *repo.Name, apikey)...)
+		authors = append(authors, listCommits(ownername, *repo.Name, apikey)...)
 	}
 
 	for _, author := range unique(authors) {
